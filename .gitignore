@@ -225,3 +225,4 @@ __marimo__/
 # .NET build output
 bin/
 obj/
+audit.log
