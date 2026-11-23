@@ -1,10 +1,12 @@
+using Microsoft.Extensions.Options;
+
 public class DatqQueue : IMessageQueue
 {
     private readonly DatqOptions _options;
 
-    public DatqQueue(DatqOptions options)
+    public DatqQueue(IOptions<DatqOptions> options)
     {
-        _options = options;
+        _options = options.Value;
     }
 
     public bool Send(byte[] msg)
