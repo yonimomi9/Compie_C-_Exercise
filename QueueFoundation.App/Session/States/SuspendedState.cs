@@ -4,6 +4,6 @@ public class SuspendedState : SessionState
 
     public override bool CanTransitionTo(SessionState next)
     {
-        return next is ActiveState or LoggingOutState;
+        return next is ActiveState or LoggingOutState or ReconnectingState;
     }
 }
