@@ -1,0 +1,1 @@
+public record AuditEntry(long Sequence, DateTime TimestampUtc, int MessageLength);
