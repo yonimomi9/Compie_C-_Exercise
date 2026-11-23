@@ -37,4 +37,30 @@ public class MessageSenderTests
         Assert.Equal(3, entry.MessageLength);
         Assert.Equal(DateTimeKind.Utc, entry.TimestampUtc.Kind);
     }
+
+    
+    [Fact]
+    public void Send_WhenSuspended_IsHeldAndSentInOrderWhenBackToActive()
+    {
+        var session = new Session(new SuspendedState());
+        var queue = new SimulatorQueue();
+        var audit = new InMemoryAudit();
+        var sender = new MessageSender(session, queue, audit);
+        var first = new byte[] { 1 };
+        var second = new byte[] { 2, 2 };
+
+        sender.Send(first);
+        sender.Send(second);
+
+        Assert.Empty(queue.Messages);
+        Assert.Equal(2, sender.PendingCount);
+
+        session.TransitionTo(new ActiveState());
+
+        Assert.Equal(2, queue.Messages.Count);
+        Assert.Equal(first, queue.Messages[0]);
+        Assert.Equal(second, queue.Messages[1]);
+        Assert.Equal(0, sender.PendingCount);
+        Assert.Equal(2, audit.Entries.Count);
+    }
 }

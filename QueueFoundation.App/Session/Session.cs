@@ -2,6 +2,8 @@ public class Session
 {
     public SessionState State { get; private set; }
 
+    public event Action<SessionState>? StateChanged;
+
     public Session() : this(new DisconnectedState())
     {
     }
@@ -22,5 +24,6 @@ public class Session
         }
 
         State = next;
+        StateChanged?.Invoke(State); 
     }
 }
